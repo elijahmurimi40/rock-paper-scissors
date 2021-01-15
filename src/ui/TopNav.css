@@ -1,0 +1,25 @@
+.nav {
+    background: -webkit-radial-gradient(#ffd700, #daa520) !important;
+    background: -moz-radial-gradient(#ffd700, #daa520) !important;
+    background: -o-radial-gradient(#ffd700, #daa520) !important;
+    background: -ms-radial-gradient(#ffd700, #daa520) !important;
+    background: radial-gradient(#ffd700, #daa520) !important;
+}
+
+.show-for-large {
+    display: flex !important;
+}
+
+.show-for-medium {
+    display: none !important;
+}
+
+@media only screen and (max-width: 440px) {
+    .show-for-large {
+        display: none !important;
+    }
+    
+    .show-for-medium {
+        display: flex !important;
+    }
+}
