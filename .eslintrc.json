@@ -22,7 +22,7 @@
         "jest"
     ],
     "rules": {
-        // "linebreak-style": ["error", "windows"],
+        "linebreak-style": 0,
         "react/react-in-jsx-scope": "off",
         "react/jsx-filename-extension": [
             2,
