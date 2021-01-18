@@ -13,32 +13,28 @@ const debounce = (callback: () => void, time: number = 305) => {
   };
 };
 
+const playingInfo = 'Artificial intelligence (AI)';
+
 function App() {
   const topNav = useRef<HTMLDivElement>(null);
   const bottomNav = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
 
-  const [containerHeight, setContainerHeight] = useState(0);
+  const [margin, setMargin] = useState(0);
 
-  // get the remaing window height
-  const remaingWindowHeight = () => {
-    const windowHeight = window.innerHeight + 20;
+  // get height of top and bottom nav
+  const topBottomHeight = () => {
     const topNavHeight = topNav.current!!.clientHeight;
-    const bottomNavHeight = bottomNav.current!!.clientHeight;
-    const containerOffset = container.current!!.offsetTop;
-
-    // game.tsx container height
-    const remaingHeight = windowHeight - topNavHeight - bottomNavHeight - containerOffset;
-    setContainerHeight(remaingHeight);
+    setMargin(topNavHeight);
   };
 
   useEffect(() => {
-    remaingWindowHeight();
+    topBottomHeight();
     // effect
-    window.addEventListener('resize', debounce(remaingWindowHeight));
+    window.addEventListener('resize', debounce(topBottomHeight));
 
     return () => {
-      window.removeEventListener('resize', debounce(remaingWindowHeight));
+      window.removeEventListener('resize', debounce(topBottomHeight));
     };
   }, []);
 
@@ -46,7 +42,7 @@ function App() {
     <div>
       <TopNav>{{ nav: topNav }}</TopNav>
       <BottomNav>{{ nav: bottomNav }}</BottomNav>
-      <Game>{{ container, cHeight: containerHeight }}</Game>
+      <Game>{{ container, margin, playingInfo }}</Game>
       <div className="error-div">Use Screen of 320px and above</div>
     </div>
   );

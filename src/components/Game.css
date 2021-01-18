@@ -1,0 +1,63 @@
+.scores {
+    position: relative;
+    border: 1px solid red;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.scores h5 {
+    position: absolute;
+    right: 0;
+    left: 0;
+}
+
+.button-y {
+    border-right: 1px solid #a52a2a !important;
+}
+
+.button-o {
+    border-left: 1px solid #a52a2a !important;
+}
+
+.button-yo {
+    cursor: default !important;
+}
+
+.button-yo:hover {
+    background-color: #f2711c !important;
+}
+
+.rps-container {
+    border: 1px solid blue;
+}
+
+.rps {
+    border: 1px solid red;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2rem;
+}
+
+.rps p {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2rem;
+}
+
+.message-info {
+    background-color: transparent !important;
+    max-width: 350px;
+    margin: 10px auto !important;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.new-game {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.playing-info {
+    background-color: transparent !important;
+    max-width: 350px;
+    margin: 10px auto !important;
+    font-family: 'Courier New', Courier, monospace;
+}

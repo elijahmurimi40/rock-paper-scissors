@@ -8,7 +8,7 @@ function TopNav(props: NavProps) {
   const { nav } = children;
 
   return (
-    <div className="ui menu nav" ref={nav}>
+    <div className="ui menu top fixed nav" ref={nav}>
       <Menu.Item href="/" header>Rock Paper Scissors</Menu.Item>
       <span className="show-for-large">
         <Nav />

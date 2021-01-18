@@ -1,6 +1,6 @@
 html, body {
     margin:0; padding:0; height:100%; width:100%;
-    overflow: hidden;
+    /* overflow: hidden; */
     background: -webkit-radial-gradient(#ffd700, #daa520) !important;
     background: -moz-radial-gradient(#ffd700, #daa520) !important;
     background: -o-radial-gradient(#ffd700, #daa520) !important;

@@ -9,6 +9,7 @@ export type NavProps = {
 export type ContainerProps = {
   children: {
     container: RefObject<HTMLDivElement> | null;
-    cHeight: number;
+    margin: number;
+    playingInfo: string;
   }
 }
