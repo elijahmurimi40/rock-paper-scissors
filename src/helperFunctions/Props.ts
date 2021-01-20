@@ -1,4 +1,5 @@
 import { RefObject } from 'react';
+import GameType from './GameInfo';
 
 export type NavProps = {
   children: {
@@ -10,6 +11,6 @@ export type ContainerProps = {
   children: {
     container: RefObject<HTMLDivElement> | null;
     margin: number;
-    playingInfo: string;
+    playingInfo: GameType;
   }
 }

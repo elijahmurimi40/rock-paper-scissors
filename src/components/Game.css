@@ -1,6 +1,5 @@
 .scores {
     position: relative;
-    border: 1px solid red;
     text-align: center;
     margin-bottom: 10px;
 }
@@ -27,20 +26,27 @@
     background-color: #f2711c !important;
 }
 
-.rps-container {
-    border: 1px solid blue;
-}
-
 .rps {
-    border: 1px solid red;
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.2rem;
 }
 
+.rps img {
+    cursor: pointer;
+}
+
 .rps p {
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.2rem;
+}
+
+.tranform-img {
+    -webkit-transform: scale(1.4);
+    -moz-transform: scale(1.4);
+    -o-transform: scale(1.4);
+    -ms-transform: scale(1.4);
+    transform: scale(1.4);
 }
 
 .message-info {

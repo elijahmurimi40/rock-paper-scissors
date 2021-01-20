@@ -4,6 +4,7 @@ import './App.css';
 import TopNav from './ui/TopNav';
 import BottomNav from './ui/BottomNav';
 import Game from './components/Game';
+import { AIinfo } from './helperFunctions/GameInfo';
 
 const debounce = (callback: () => void, time: number = 305) => {
   let debounceTimer = 0;
@@ -13,7 +14,7 @@ const debounce = (callback: () => void, time: number = 305) => {
   };
 };
 
-const playingInfo = 'Artificial intelligence (AI)';
+const playingInfo = AIinfo;
 
 function App() {
   const topNav = useRef<HTMLDivElement>(null);
