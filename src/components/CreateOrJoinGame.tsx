@@ -10,7 +10,8 @@ import {
 import { friendSocket, strangerSocket } from '../helperFunctions/SocketIO';
 
 const FRIEND_LINK = '/play-with-friend';
-let friendLink = '';
+const STRANGER_LINK = '/play-with-stranger';
+let friendStrangerLink = '';
 let gameCode = '';
 let isComponentMounted = false;
 
@@ -68,9 +69,15 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
       return;
     }
 
+    if (type != null && nameNoSpace.substr(nameNoSpace.length - 3) === '-s-') {
+      friendStrangerLink = `${STRANGER_LINK}/${nameNoSpace}`;
+      setRedirect(true);
+      return;
+    }
+
     if (type != null) {
       gameCode = nameNoSpace;
-      friendLink = `${FRIEND_LINK}/${gameCode}`;
+      friendStrangerLink = `${FRIEND_LINK}/${gameCode}`;
       setRedirect(true);
       return;
     }
@@ -85,7 +92,7 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
       }
 
       friendSocket.emit('create friend room', `${maxScore}-max-score-${name}-rps-${gameCode}-f-`);
-      friendLink = `${FRIEND_LINK}/${gameCode}-f-`;
+      friendStrangerLink = `${FRIEND_LINK}/${gameCode}-f-`;
       friendSocket.on('room already exists', () => {
         errorParagraph.current!!.textContent = 'err. Name already taken :-(';
       });
@@ -99,6 +106,20 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
       nameInput.current!!.parentElement!!.classList.remove('disabled');
       buttonB.current!!.classList.remove('disabled');
       errorParagraph.current!!.textContent = '';
+
+      gameCode = btoa(nameNoSpace);
+      if (gameCode.length > 5) {
+        gameCode = gameCode.slice(gameCode.length - 5, gameCode.length);
+      }
+
+      strangerSocket.emit('create stranger room', `${maxScore}-max-score-${name}-rps-${gameCode}-s-`);
+      friendStrangerLink = `${STRANGER_LINK}/${gameCode}-s-`;
+      strangerSocket.on('room already exists st', () => {
+        errorParagraph.current!!.textContent = 'err. Name already taken :-(';
+      });
+      strangerSocket.on('creating stranger room', () => {
+        setRedirect(true);
+      });
     } else {
       nameInput.current!!.parentElement!!.classList.remove('disabled');
       buttonB.current!!.classList.remove('disabled');
@@ -201,7 +222,7 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
   return (
     <>
       {/* redirect to playing zone */}
-      {redirect ? <Redirect push to={friendLink} /> : ''}
+      {redirect ? <Redirect push to={friendStrangerLink} /> : ''}
       {/* create or join game input */}
       <div className="ui center aligned basic segment join-game background">
         <p>Create A Game</p>

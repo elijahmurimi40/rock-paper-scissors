@@ -88,6 +88,14 @@ function App() {
           </PlayOnline>
         </Route>
 
+        <Route exact path="/play-with-stranger/:code">
+          <PlayOnline>
+            {{
+              container, margin, playingInfo, selectDiv,
+            }}
+          </PlayOnline>
+        </Route>
+
       </Switch>
 
       <div className="error-div">Use Screen of 320px and above</div>

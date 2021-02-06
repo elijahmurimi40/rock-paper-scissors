@@ -11,7 +11,7 @@ import './Game.css';
 import rock from './rock.svg';
 import paper from './paper.svg';
 import scissors from './scissors.svg';
-import { friendSocket } from '../helperFunctions/SocketIO';
+import { friendSocket, strangerSocket } from '../helperFunctions/SocketIO';
 
 /**
  * Y -> your score
@@ -69,6 +69,14 @@ function Game(props: ContainerProps) {
     container, margin, playingInfo, selectDiv,
   } = children;
 
+  const currentSocket = playingInfo === friendInfo ? friendSocket : strangerSocket;
+  const currentSocketRef = useRef<any>();
+  currentSocketRef.current = currentSocket;
+
+  const redirectLink = playingInfo === friendInfo ? '/play-with-friend' : '/play-with-stranger';
+  const redirectLinkRef = useRef<any>();
+  redirectLinkRef.current = redirectLink;
+
   // get child nodes of messageInfo to show who won or lost
   // eslint-disable-next-line no-undef
   let messageInfoChildNodes: NodeListOf<ChildNode>;
@@ -81,7 +89,6 @@ function Game(props: ContainerProps) {
   let p: ChildNode;
 
   const isAI = () => playingInfo === AIinfo;
-  const isFriendInfo = () => playingInfo === friendInfo;
 
   const initMessageParams = () => {
     if (messageInfo.current === null) return;
@@ -119,32 +126,28 @@ function Game(props: ContainerProps) {
   };
 
   const handleRejectRequest = () => {
-    if (isFriendInfo()) {
-      if (typeOfRequest === 'max-score') {
-        friendSocket.emit('reject changing max score', code);
-      } else if (typeOfRequest === 'new-game') {
-        friendSocket.emit('reject new game', code);
-      } else if (typeOfRequest === 'play-again') {
-        friendSocket.emit('reject play again', code);
-        setRedirect(true);
-      }
+    if (typeOfRequest === 'max-score') {
+      currentSocketRef.current.emit('reject changing max score', code);
+    } else if (typeOfRequest === 'new-game') {
+      currentSocketRef.current.emit('reject new game', code);
+    } else if (typeOfRequest === 'play-again') {
+      currentSocketRef.current.emit('reject play again', code);
+      setRedirect(true);
     }
     setShowRequestMessage(false);
   };
 
   const handleAcceptRequest = () => {
-    if (isFriendInfo()) {
-      if (typeOfRequest === 'max-score') {
-        friendSocket.emit('accept changing max score', code);
-        maxScore = acceptedMaxScore;
-        prevMaxScore = maxScore;
-        (selectDiv!!.current!!.childNodes[1] as HTMLSelectElement)
-          .value = maxScore.toString();
-      } else if (typeOfRequest === 'new-game') {
-        friendSocket.emit('accept new game', code);
-      } else if (typeOfRequest === 'play-again') {
-        friendSocket.emit('accept play again', code);
-      }
+    if (typeOfRequest === 'max-score') {
+      currentSocketRef.current.emit('accept changing max score', code);
+      maxScore = acceptedMaxScore;
+      prevMaxScore = maxScore;
+      (selectDiv!!.current!!.childNodes[1] as HTMLSelectElement)
+        .value = maxScore.toString();
+    } else if (typeOfRequest === 'new-game') {
+      currentSocketRef.current.emit('accept new game', code);
+    } else if (typeOfRequest === 'play-again') {
+      currentSocketRef.current.emit('accept play again', code);
     }
     setShowRequestMessage(false);
     newGame(false);
@@ -176,16 +179,17 @@ function Game(props: ContainerProps) {
       setOpponentScore('0');
       if (newGameBtn.current === null) return;
       newGameBtn.current!!.textContent = 'New Game';
-    } else if (isFriendInfo()) {
-      if (newGameBtn.current!!.textContent === 'New Game') {
-        answerMessage = 'Requesting opponent to start a new game';
-        friendSocket.emit('new game', code);
-        setShowAnswerMessage(true);
-      } else if (newGameBtn.current!!.textContent === 'Play Again?') {
-        answerMessage = 'Requesting opponent to play again';
-        friendSocket.emit('play again', code);
-        setShowAnswerMessage(true);
-      }
+      return;
+    }
+
+    if (newGameBtn.current!!.textContent === 'New Game') {
+      answerMessage = 'Requesting opponent to start a new game';
+      currentSocketRef.current.emit('new game', code);
+      setShowAnswerMessage(true);
+    } else if (newGameBtn.current!!.textContent === 'Play Again?') {
+      answerMessage = 'Requesting opponent to play again';
+      currentSocketRef.current.emit('play again', code);
+      setShowAnswerMessage(true);
     }
   };
 
@@ -367,10 +371,10 @@ function Game(props: ContainerProps) {
     if (isAI() && !isMessageShown) {
       const CPUChoice = Math.floor(Math.random() * 3);
       chooseWinner(choiceNo, CPUChoice);
-    } else if (isFriendInfo() && !isMessageShown) {
+    } else if (!isMessageShown) {
       yourChoice = parseInt(choice, 10);
       checkForChoices();
-      friendSocket.emit('player choice', choice, code);
+      currentSocketRef.current.emit('player choice', choice, code);
     }
   };
 
@@ -384,9 +388,9 @@ function Game(props: ContainerProps) {
       maxScore = (e.target as HTMLSelectElement).value as unknown as number;
       if (isAI()) {
         newGame(false);
-      } else if (isFriendInfo()) {
+      } else {
         answerMessage = `Requesting opponent to change max score from ${prevMaxScore} to ${maxScore}`;
-        friendSocket.emit('change max score?', maxScore, code);
+        currentSocketRef.current.emit('change max score?', maxScore, code);
         setShowAnswerMessage(true);
       }
     });
@@ -410,14 +414,14 @@ function Game(props: ContainerProps) {
     });
 
     // open sockect
-    connectSocket.current(friendSocket);
+    connectSocket.current(currentSocketRef.current);
     yourChoice = null;
     opponentChoice = null;
     isMessageShown = false;
 
     return () => {
       // cleanup
-      disconnectSocket.current(friendSocket);
+      disconnectSocket.current(currentSocketRef.current);
     };
   }, []);
 
@@ -429,7 +433,7 @@ function Game(props: ContainerProps) {
       }}
       ref={container}
     >
-      {redirect && <Redirect to="/play-with-friend" />}
+      {redirect && <Redirect to={redirectLinkRef.current} />}
       <Row>
         <Col />
         <Col

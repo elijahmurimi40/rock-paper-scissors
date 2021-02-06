@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ContainerProps } from '../helperFunctions/Props';
 import { loadingTableRow, serverErrorTableRow } from '../ui/CreateOrJoinGameUI';
-import { friendSocket } from '../helperFunctions/SocketIO';
+import { friendSocket, strangerSocket } from '../helperFunctions/SocketIO';
 import Game from './Game';
-import GameType, { friendInfo } from '../helperFunctions/GameInfo';
+import GameType, { friendInfo, strangerInfo } from '../helperFunctions/GameInfo';
 
 /**
  * code will have -f- for friend and -s- for stranger
@@ -99,6 +99,12 @@ function PlayOnline(props: ContainerProps) {
         friendSocket.io.off('error');
         friendSocket.off();
         break;
+      case '-s-':
+        strangerSocket.off('connect');
+        strangerSocket.off('disconnect');
+        strangerSocket.io.off('error');
+        strangerSocket.off();
+        break;
       default:
     }
   };
@@ -141,7 +147,8 @@ function PlayOnline(props: ContainerProps) {
       playingInfo = friendInfo;
       connectToAllSockets(friendSocket);
     } else if (validCode === '-s-') {
-      setIsLoading(false);
+      playingInfo = strangerInfo;
+      connectToAllSockets(strangerSocket);
     } else {
       setIsLoading(false);
       setError(true);
@@ -160,7 +167,14 @@ function PlayOnline(props: ContainerProps) {
   const waitForPlayer = (
     <tr>
       <td colSpan={2}>
-        <p>Share the code with a friend</p>
+        <p>
+          {/* Share the code with a friend */}
+          {
+            playingInfo === strangerInfo
+              ? 'Waiting for connection or share the code'
+              : 'Share the code with a friend'
+          }
+        </p>
         <div className="ui action input">
           <input ref={refInput} type="text" value={code} readOnly />
           <button type="button" className="ui teal right labeled icon button" onClick={copyToClipBoard}>
@@ -175,7 +189,14 @@ function PlayOnline(props: ContainerProps) {
   const playerLeft = (
     <tr>
       <td colSpan={2}>
-        <p>Your oppenent Left :-(. Share code with friend</p>
+        <p>
+          {/* Your oppenent Left :-(. Share code with friend */}
+          {
+            playingInfo === strangerInfo
+              ? 'Your oppenent Left :-(. Waiting for connection or share the code'
+              : 'Your oppenent Left :-(. Share code with friend'
+          }
+        </p>
         <div className="ui action input">
           <input ref={refInput} type="text" value={code} readOnly />
           <button type="button" className="ui teal right labeled icon button" onClick={copyToClipBoard}>
@@ -227,6 +248,7 @@ function PlayOnline(props: ContainerProps) {
       // cleanup
       disconnectSocket(codeRef.current.substr(codeRef.current.length - 3));
       friendSocket.emit('player leaving');
+      strangerSocket.emit('player leaving');
     };
   }, []);
 
