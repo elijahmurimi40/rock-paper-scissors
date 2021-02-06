@@ -1,9 +1,13 @@
 import { useRef, useEffect, useState } from 'react';
 // import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import TopNav from './ui/TopNav';
 import BottomNav from './ui/BottomNav';
 import Game from './components/Game';
+import Friend from './components/Friend';
+import Stranger from './components/Stranger';
+import PlayOnline from './components/PlayOnline';
 import { AIinfo } from './helperFunctions/GameInfo';
 
 const debounce = (callback: () => void, time: number = 305) => {
@@ -20,6 +24,7 @@ function App() {
   const topNav = useRef<HTMLDivElement>(null);
   const bottomNav = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
+  const selectDiv = useRef<HTMLDivElement>(null);
 
   const [margin, setMargin] = useState(0);
 
@@ -40,12 +45,53 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <TopNav>{{ nav: topNav }}</TopNav>
-      <BottomNav>{{ nav: bottomNav }}</BottomNav>
-      <Game>{{ container, margin, playingInfo }}</Game>
+    <Router>
+
+      <div>
+        <TopNav>{{ nav: topNav, selectDiv }}</TopNav>
+        <BottomNav>
+          {{ nav: bottomNav, selectDiv: null }}
+        </BottomNav>
+      </div>
+
+      <Switch>
+
+        <Route exact path="/rock-paper-scissors">
+          <Game>
+            {{
+              container, margin, playingInfo, selectDiv,
+            }}
+          </Game>
+        </Route>
+
+        <Route exact path="/play-with-friend">
+          <Friend>
+            {{
+              container, margin, playingInfo, selectDiv,
+            }}
+          </Friend>
+        </Route>
+
+        <Route exact path="/play-with-stranger">
+          <Stranger>
+            {{
+              container, margin, playingInfo, selectDiv,
+            }}
+          </Stranger>
+        </Route>
+
+        <Route exact path="/play-with-friend/:code">
+          <PlayOnline>
+            {{
+              container, margin, playingInfo, selectDiv,
+            }}
+          </PlayOnline>
+        </Route>
+
+      </Switch>
+
       <div className="error-div">Use Screen of 320px and above</div>
-    </div>
+    </Router>
   );
 }
 

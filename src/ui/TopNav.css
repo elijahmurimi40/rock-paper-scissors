@@ -14,7 +14,7 @@
     display: none !important;
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (max-width: 574px) {
     .show-for-large {
         display: none !important;
     }

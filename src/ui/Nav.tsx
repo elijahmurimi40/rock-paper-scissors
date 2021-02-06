@@ -1,8 +1,23 @@
+import { NavLink } from 'react-router-dom';
+
 function Nav() {
   return (
     <>
-      <a className="item" href="/play-with-friend">Play With Friend</a>
-      <a className="item" href="/play-with-stranger">Play With Stranger</a>
+      <NavLink
+        activeClassName="active"
+        className="item"
+        to="/play-with-friend"
+      >
+        Play With Friend
+      </NavLink>
+
+      <NavLink
+        activeClassName="active"
+        className="item"
+        to="/play-with-stranger"
+      >
+        Play With Stranger
+      </NavLink>
     </>
   );
 }

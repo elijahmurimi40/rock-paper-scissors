@@ -1,0 +1,28 @@
+.background {
+    background: -webkit-radial-gradient(#ffd700, #daa520) !important;
+    background: -moz-radial-gradient(#ffd700, #daa520) !important;
+    background: -o-radial-gradient(#ffd700, #daa520) !important;
+    background: -ms-radial-gradient(#ffd700, #daa520) !important;
+    background: radial-gradient(#ffd700, #daa520) !important;
+}
+
+.join-game {
+    background-color: transparent !important;
+    min-height: 100px;
+    width: 100%;
+    max-width: 500px;
+    left: 0;
+    right: 0;
+    margin: 0 auto !important;
+}
+
+.games {
+    width: 100%;
+    max-width: 500px;
+    margin: 10px auto 0px auto;
+}
+
+.table-games {
+    background-color: transparent !important;
+    max-width: 300px !important;
+}
