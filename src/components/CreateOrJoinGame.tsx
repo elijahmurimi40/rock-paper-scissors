@@ -4,8 +4,8 @@ import { CreateOrJoinGameProps } from '../helperFunctions/Props';
 import './CreateOrJoinGame.css';
 import GameType, { friendInfo, strangerInfo } from '../helperFunctions/GameInfo';
 import {
-  joinGame, loadingTableRow, serverErrorTableRow,
-  noAvailableGamesTableRow,
+  enterGameCode, joinGame, loadingTableRow,
+  serverErrorTableRow, noAvailableGamesTableRow,
 } from '../ui/CreateOrJoinGameUI';
 import { friendSocket, strangerSocket } from '../helperFunctions/SocketIO';
 
@@ -143,65 +143,6 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
     setRedirect(true);
   };
 
-  const enterGameCode = (
-    <>
-      <p>Enter Game Code To Join a Game</p>
-      <div className="ui input small">
-        <input
-          ref={gameCodeI}
-          type="text"
-          placeholder="Enter Game Code ....."
-          maxLength={40}
-          minLength={3}
-        />
-      </div>
-
-      <button
-        ref={enterGameB}
-        type="button"
-        className="small ui orange button"
-        onClick={() => createJoinGame([gameCodeI, enterGameB, errorMessageCodeP], '')}
-      >
-        Enter Game
-      </button>
-      <p ref={errorMessageCodeP} />
-    </>
-  );
-
-  const availableGamesTableRow = (
-    <>
-      {
-        roomsArrRef.current.map((room: any, idx: number) => {
-          const code = room[0];
-          const maxScore = room[1].split('-max-score-')[0];
-          const name = room[1].split('-max-score-')[1];
-          if (filterValue.current !== 'all' && maxScore !== filterValue.current) {
-            if (filteredItemsNumber.current === 0) availableGamesRef.current = 0;
-            return;
-          }
-          filteredItemsNumber.current = 1;
-          // eslint-disable-next-line consistent-return
-          return (
-            // eslint-disable-next-line react/no-array-index-key
-            <tr key={idx}>
-              <td>{name}</td>
-              <td>{`MAX SCORE: ${maxScore}`}</td>
-              <td>
-                <button
-                  type="button"
-                  className="ui mini orange button"
-                  onClick={() => joinGameOnClick(code)}
-                >
-                  Join Game
-                </button>
-              </td>
-            </tr>
-          );
-        })
-      }
-    </>
-  );
-
   connectSocket.current = (socket: any) => {
     isComponentMounted = true;
     socket.on('connect', () => {
@@ -261,13 +202,7 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
       setRoomsArr(rooms);
       setAvailableGames(rooms.length);
     });
-  };
 
-  useEffect(() => {
-    // effect
-    (selectDiv!!.current!!.childNodes[1] as HTMLSelectElement).disabled = true;
-    friendSocketRef.current();
-    strangerSocketRef.current();
     filterValue.current = selectFilter.current!!.value;
     selectFilter.current!!.addEventListener('change', (e) => {
       filterValue.current = (e.target as HTMLSelectElement).value;
@@ -275,6 +210,48 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
       filteredItemsNumber.current = 0;
       setRoomsArr(newRoomArr);
     });
+  };
+
+  const availableGamesTableRow = (
+    <>
+      {
+        roomsArrRef.current.map((room: any, idx: number) => {
+          const code = room[0];
+          const maxScore = room[1].split('-max-score-')[0];
+          const name = room[1].split('-max-score-')[1];
+          if (filterValue.current !== 'all' && maxScore !== filterValue.current) {
+            if (filteredItemsNumber.current === 0) availableGamesRef.current = 0;
+            return;
+          }
+          filteredItemsNumber.current = 1;
+          // eslint-disable-next-line consistent-return
+          return (
+            // eslint-disable-next-line react/no-array-index-key
+            <tr key={idx}>
+              <td>{name}</td>
+              <td>{`MAX SCORE: ${maxScore}`}</td>
+              <td>
+                <button
+                  type="button"
+                  className="ui mini orange button"
+                  onClick={() => joinGameOnClick(code)}
+                >
+                  Join Game
+                </button>
+              </td>
+            </tr>
+          );
+        })
+      }
+    </>
+  );
+
+  useEffect(() => {
+    // effect
+    (selectDiv!!.current!!.childNodes[1] as HTMLSelectElement).disabled = true;
+    friendSocketRef.current();
+    strangerSocketRef.current();
+
     return () => {
       // cleanup
       disconnectSocket(playingInfoRef.current);
@@ -326,7 +303,10 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
           Or
         </div>
 
-        {isPlayingInfoEqualFriendInfo.current() && enterGameCode}
+        {
+          isPlayingInfoEqualFriendInfo.current()
+          && enterGameCode(gameCodeI, enterGameB, createJoinGame, errorMessageCodeP)
+        }
         {!isPlayingInfoEqualFriendInfo.current() && joinGame(selectFilter)}
       </div>
 

@@ -1,5 +1,38 @@
 import { RefObject } from 'react';
 
+// Enter game code to join game
+export const enterGameCode = (
+  gameCodeI: RefObject<HTMLInputElement> | null,
+  enterGameB: RefObject<HTMLButtonElement> | null,
+  // eslint-disable-next-line no-unused-vars
+  createJoinGame: (arrRef: any[], type: string | null) => void,
+  errorMessageCodeP: RefObject<HTMLParagraphElement> | null,
+) => (
+  <>
+    <p>Enter Game Code To Join a Game</p>
+    <div className="ui input small">
+      <input
+        ref={gameCodeI}
+        type="text"
+        placeholder="Enter Game Code ....."
+        maxLength={40}
+        minLength={3}
+      />
+    </div>
+
+    <button
+      ref={enterGameB}
+      type="button"
+      className="small ui orange button"
+      onClick={() => createJoinGame([gameCodeI, enterGameB, errorMessageCodeP], '')}
+    >
+      Enter Game
+    </button>
+    <p ref={errorMessageCodeP} />
+  </>
+);
+
+//  join game section
 export const joinGame = (selectFilter: RefObject<HTMLSelectElement> | null) => (
   <>
     <h4 className="ui header">
