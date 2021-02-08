@@ -5,7 +5,7 @@ import './CreateOrJoinGame.css';
 import GameType, { friendInfo, strangerInfo } from '../helperFunctions/GameInfo';
 import {
   joinGame, loadingTableRow, serverErrorTableRow,
-  noAvailableGamesTableRow, availableGamesTableRow,
+  noAvailableGamesTableRow,
 } from '../ui/CreateOrJoinGameUI';
 import { friendSocket, strangerSocket } from '../helperFunctions/SocketIO';
 
@@ -28,6 +28,9 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
   const enterGameB = useRef<HTMLButtonElement>(null);
   const errorMessageCodeP = useRef<HTMLParagraphElement>(null);
   const selectMaxScore = useRef<HTMLSelectElement>(null);
+  const selectFilter = useRef<HTMLSelectElement>(null);
+  const filterValue = useRef('');
+  const filteredItemsNumber = useRef(0);
 
   const isPlayingInfoEqualFriendInfo = useRef((): boolean => true);
   // eslint-disable-next-line no-unused-vars
@@ -40,6 +43,13 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
   const [serverError, setServerError] = useState(false);
   const [availableGames, setAvailableGames] = useState(0);
   const [redirect, setRedirect] = useState(false);
+  const [roomsArr, setRoomsArr] = useState([]);
+
+  const availableGamesRef = useRef(0);
+  availableGamesRef.current = availableGames;
+
+  const roomsArrRef = useRef([]);
+  roomsArrRef.current = roomsArr;
 
   isPlayingInfoEqualFriendInfo.current = () => playingInfo === friendInfo;
 
@@ -118,6 +128,7 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
         errorParagraph.current!!.textContent = 'err. Name already taken :-(';
       });
       strangerSocket.on('creating stranger room', () => {
+        strangerSocket.emit('get rooms');
         setRedirect(true);
       });
     } else {
@@ -125,6 +136,11 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
       buttonB.current!!.classList.remove('disabled');
       errorParagraph.current!!.textContent = 'Server Error! Try again';
     }
+  };
+
+  const joinGameOnClick = (code: string) => {
+    friendStrangerLink = `${STRANGER_LINK}/${code}`;
+    setRedirect(true);
   };
 
   const enterGameCode = (
@@ -149,6 +165,40 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
         Enter Game
       </button>
       <p ref={errorMessageCodeP} />
+    </>
+  );
+
+  const availableGamesTableRow = (
+    <>
+      {
+        roomsArrRef.current.map((room: any, idx: number) => {
+          const code = room[0];
+          const maxScore = room[1].split('-max-score-')[0];
+          const name = room[1].split('-max-score-')[1];
+          if (filterValue.current !== 'all' && maxScore !== filterValue.current) {
+            if (filteredItemsNumber.current === 0) availableGamesRef.current = 0;
+            return;
+          }
+          filteredItemsNumber.current = 1;
+          // eslint-disable-next-line consistent-return
+          return (
+            // eslint-disable-next-line react/no-array-index-key
+            <tr key={idx}>
+              <td>{name}</td>
+              <td>{`MAX SCORE: ${maxScore}`}</td>
+              <td>
+                <button
+                  type="button"
+                  className="ui mini orange button"
+                  onClick={() => joinGameOnClick(code)}
+                >
+                  Join Game
+                </button>
+              </td>
+            </tr>
+          );
+        })
+      }
     </>
   );
 
@@ -205,6 +255,12 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
   strangerSocketRef.current = () => {
     if (isPlayingInfoEqualFriendInfo.current()) return;
     connectSocket.current(strangerSocket);
+    strangerSocket.emit('get rooms');
+    strangerSocket.on('rooms map', (rooms: any) => {
+      filteredItemsNumber.current = 0;
+      setRoomsArr(rooms);
+      setAvailableGames(rooms.length);
+    });
   };
 
   useEffect(() => {
@@ -212,6 +268,13 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
     (selectDiv!!.current!!.childNodes[1] as HTMLSelectElement).disabled = true;
     friendSocketRef.current();
     strangerSocketRef.current();
+    filterValue.current = selectFilter.current!!.value;
+    selectFilter.current!!.addEventListener('change', (e) => {
+      filterValue.current = (e.target as HTMLSelectElement).value;
+      const newRoomArr = [...roomsArrRef.current];
+      filteredItemsNumber.current = 0;
+      setRoomsArr(newRoomArr);
+    });
     return () => {
       // cleanup
       disconnectSocket(playingInfoRef.current);
@@ -264,7 +327,7 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
         </div>
 
         {isPlayingInfoEqualFriendInfo.current() && enterGameCode}
-        {!isPlayingInfoEqualFriendInfo.current() && joinGame}
+        {!isPlayingInfoEqualFriendInfo.current() && joinGame(selectFilter)}
       </div>
 
       {/* game info */}
@@ -282,14 +345,14 @@ function CreateOrJoinGame(props: CreateOrJoinGameProps) {
               !isPlayingInfoEqualFriendInfo.current()
               && !isLoading
               && !serverError
-              && availableGames <= 0
+              && availableGamesRef.current <= 0
               && noAvailableGamesTableRow
             }
             {
               !isPlayingInfoEqualFriendInfo.current()
               && !isLoading
               && !serverError
-              && availableGames > 0
+              && availableGamesRef.current > 0
               && availableGamesTableRow
             }
           </tbody>

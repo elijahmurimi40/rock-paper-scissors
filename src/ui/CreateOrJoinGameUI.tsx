@@ -1,7 +1,23 @@
-export const joinGame = (
-  <h4 className="ui header">
-    Join Game
-  </h4>
+import { RefObject } from 'react';
+
+export const joinGame = (selectFilter: RefObject<HTMLSelectElement> | null) => (
+  <>
+    <h4 className="ui header">
+      Join Game
+    </h4>
+    <select
+      ref={selectFilter}
+      style={{ padding: '5px 5px' }}
+      name="max_score_filter"
+      className="ui selection dropdown select-max-score"
+      defaultValue="all"
+    >
+      <option key="all" value="all">All</option>
+      <option key="3" value="3">3</option>
+      <option key="5" value="5">5</option>
+    </select>
+    <span style={{ paddingLeft: '15px' }}>Select Max Score</span>
+  </>
 );
 
 export const loadingTableRow = (
@@ -32,25 +48,4 @@ export const noAvailableGamesTableRow = (
       Create one?
     </td>
   </tr>
-);
-
-export const availableGamesTableRow = (
-  <>
-    <tr>
-      <td>Game 1</td>
-      <td>
-        <button type="button" className="ui mini orange button">
-          Join Game
-        </button>
-      </td>
-    </tr>
-    <tr>
-      <td>Game 2</td>
-      <td>
-        <button type="button" className="ui mini orange button">
-          Join Game
-        </button>
-      </td>
-    </tr>
-  </>
 );
