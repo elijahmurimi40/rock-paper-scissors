@@ -65,6 +65,7 @@ function PlayOnline(props: ContainerProps) {
 
   const doesRoomExists = (socket: any) => {
     socket.emit('does room exists', code);
+    setIsLoading(true);
   };
 
   connectSocket.current = (socket: any) => {
