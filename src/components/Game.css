@@ -67,3 +67,8 @@
     margin: 10px auto !important;
     font-family: 'Courier New', Courier, monospace;
 }
+
+/* CreateOrJoinGame.tsx.css */
+.select-max-score {
+    min-width: auto !important;
+}
