@@ -105,11 +105,12 @@ function Game(props: ContainerProps) {
     if (!isMessageShown) initMessageParams();
     isMessageShown = false;
     header.textContent = 'Rock Paper Scissors';
-    if (isAI()) {
-      p.textContent = 'Waiting for you .....';
-    } else {
-      p.textContent = 'Waiting for opponent .....';
-    }
+    // if (isAI()) {
+    //   p.textContent = 'Waiting for you .....';
+    // } else {
+    //   p.textContent = 'Waiting for opponent .....';
+    // }
+    p.textContent = 'Waiting for you .....';
 
     const i = document.createElement('i');
     i.className = 'circle notched loading icon';
@@ -556,7 +557,8 @@ function Game(props: ContainerProps) {
             <div className="content">
               <div className="header">Rock Paper Scissors</div>
               <p style={{ color: '#000', fontWeight: 'bold' }}>
-                {isAI() ? 'Waiting for you .....' : 'Waiting for opponent .....'}
+                Waiting for you .....
+                {/* {isAI() ? 'Waiting for you .....' : 'Waiting for opponent .....'} */}
               </p>
             </div>
           </div>
