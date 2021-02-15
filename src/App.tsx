@@ -56,7 +56,7 @@ function App() {
 
       <Switch>
 
-        <Route exact path="/rock-paper-scissors">
+        <Route exact path="/">
           <Game>
             {{
               container, margin, playingInfo, selectDiv,

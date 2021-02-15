@@ -27,7 +27,7 @@ function TopNav(props: NavProps) {
       <NavLink
         activeClassName="active"
         className="header item"
-        to="/rock-paper-scissors"
+        to="/"
       >
         Rock Paper Scissors
       </NavLink>
