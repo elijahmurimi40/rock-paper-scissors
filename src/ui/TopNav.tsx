@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { NavProps } from '../helperFunctions/Props';
 import Nav from './Nav';
 import './TopNav.css';
@@ -11,6 +11,7 @@ const optionsArr = [
 function TopNav(props: NavProps) {
   const { children } = props;
   const { nav, selectDiv } = children;
+  const { pathname } = useLocation();
 
   const options = [];
 
@@ -26,6 +27,7 @@ function TopNav(props: NavProps) {
     <div className="ui menu top fixed nav" ref={nav}>
       <NavLink
         activeClassName="active"
+        isActive={() => !['/play-with-friend', '/play-with-stranger'].includes(pathname)}
         className="header item"
         to="/"
       >
