@@ -2,7 +2,7 @@
 
 Rock Paper Scissors Online using Socket.io
 
-[https://fortie40.github.io/rock-paper-scissors/](https://fortie40.github.io/rock-paper-scissors/)
+[https://elijahmurimi40.github.io/rock-paper-scissors/](https://elijahmurimi40.github.io/rock-paper-scissors/)
 
 ## License
 
