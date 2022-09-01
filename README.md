@@ -4,6 +4,11 @@ Rock Paper Scissors Online using Socket.io
 
 [https://elijahmurimi40.github.io/rock-paper-scissors/](https://elijahmurimi40.github.io/rock-paper-scissors/)
 
+### Demo
+<img 
+	src="demo/rps40.gif" 
+	alt="Demo" width="800px" hspace="20" />
+
 ## License
 
 MIT License
