@@ -7,7 +7,7 @@ Rock Paper Scissors Online using Socket.io
 ### Demo
 <img 
 	src="demo/rps40.gif" 
-	alt="Demo" width="800px" hspace="20" />
+	alt="Demo" hspace="20" />
 
 ## License
 
