@@ -2,7 +2,7 @@
 
 Rock Paper Scissors Online using Socket.io
 
-[https://elijahmurimi40.github.io/rock-paper-scissors/](https://elijahmurimi40.github.io/rock-paper-scissors/)
+[https://rps.elijahmurimi.dev/](https://rps.elijahmurimi.dev/)
 
 ### Demo
 <img 
