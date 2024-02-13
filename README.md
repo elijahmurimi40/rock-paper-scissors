@@ -1,8 +1,7 @@
 ## Rock Paper Scissors
+Developed a dynamic Rock, Paper, Scissors website using WebSocket technology for real-time multiplayer interactions. Experience the thrill of instantaneous gameplay and compete with friends online. Check it out: [https://rps.elijahmurimi.dev/](https://rps.elijahmurimi.dev/)
 
-Rock Paper Scissors Online using Socket.io
-
-[https://rps.elijahmurimi.dev/](https://rps.elijahmurimi.dev/)
+Building a Rock, Paper, Scissors website with WebSockets stems from a curiosity about socket technology. I had chance to explore real-time communication intricacies while applying them to a popular game, showcasing technical skills and enhancing user experience.
 
 ### Demo
 <img 
