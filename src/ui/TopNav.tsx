@@ -24,30 +24,39 @@ function TopNav(props: NavProps) {
   }
 
   return (
-    <div className="ui menu top fixed nav" ref={nav}>
-      <NavLink
-        activeClassName="active"
-        isActive={() => !['/play-with-friend', '/play-with-stranger'].includes(pathname)}
-        className="header item"
-        to="/"
+    <div className="ui menu top nav fixed">
+      <div
+        className="ui menu top nav"
+        ref={nav}
+        style={{
+          maxWidth: '800px',
+          margin: '0 auto',
+        }}
       >
-        Rock Paper Scissors
-      </NavLink>
-
-      <span className="show-for-large">
-        <Nav />
-      </span>
-
-      <div className="item" ref={selectDiv}>
-        Max Score
-        <select
-          style={{ padding: '5px 5px' }}
-          name="max_score"
-          className="ui selection fluid dropdown"
-          defaultValue="3"
+        <NavLink
+          activeClassName="active"
+          isActive={() => !['/play-with-friend', '/play-with-stranger'].includes(pathname)}
+          className="header item"
+          to="/"
         >
-          {options}
-        </select>
+          Rock Paper Scissors
+        </NavLink>
+
+        <span className="show-for-large">
+          <Nav />
+        </span>
+
+        <div className="item" ref={selectDiv}>
+          Max Score
+          <select
+            style={{ padding: '5px 5px' }}
+            name="max_score"
+            className="ui selection fluid dropdown"
+            defaultValue="3"
+          >
+            {options}
+          </select>
+        </div>
       </div>
     </div>
   );
